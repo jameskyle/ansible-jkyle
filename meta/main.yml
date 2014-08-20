@@ -22,11 +22,10 @@ galaxy_info:
       - raring
       - saucy
       - trusty
-    - name: Debian
+  - name: Debian
     versions:
       - squeeze
       - wheezy
-
   categories:
   dependencies: []
  
