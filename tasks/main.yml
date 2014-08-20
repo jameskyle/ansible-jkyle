@@ -1,0 +1,66 @@
+---
+# file: roles/jkyle/tasks/main.yml
+- name: Install YUM Packages
+  yum:  name={{ item }} state=latest
+  when: ansible_os_family == "RedHat"
+  sudo: yes
+  with_items:
+    - bind-utils
+    - zsh
+    - git-core
+    - lsof
+    - tcpdump
+    - vim
+  tags: 
+    - users
+    - packages
+
+- name: Install APT Packages
+  apt: name={{ item }} state=latest
+  when: ansible_os_family == "Debian"
+  sudo: yes
+  with_items:
+      - apt-file
+      - zsh
+      - vim
+      - git
+  tags:
+      - users
+      - packages
+- name: Create James
+  user: name=jkyle
+        uid=1000
+        shell=/usr/bin/zsh
+  sudo: yes
+  tags:
+      - users
+- name: Configure jkyle sudoers
+  copy: src=sudoers dest=/etc/sudoers.d/jkyle owner=root group=root mode=0600
+  sudo: yes
+  tags:
+      - users
+
+- name: Deploy jkyle User Key
+  authorized_key: user=jkyle key="{{ lookup('file', 'att_rsa.pub') }}"
+  tags:
+      - users
+
+- name: Setup James Home Directory
+  git: repo=https://jkyle@bitbucket.org/jkyle/prezto.git
+       dest=/home/jkyle/.zprezto
+       version=develop
+  tags:
+      - users
+
+- name: Link James configuration files
+  file: src=/home/jkyle/.zprezto/runcoms/{{ item }} dest=/home/jkyle/.{{ item }} state=link
+  with_items:
+    - zlogin
+    - zlogout
+    - zpreztorc
+    - zprofile
+    - zshenv
+    - zshrc
+  tags:
+      - users
+
