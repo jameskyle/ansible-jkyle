@@ -36,11 +36,15 @@
     - zsh
     - vim
     - git
+    - ncurses
+
+- shell: which zsh
+  register: zsh_path
 
 - name: Create James
   user: name=jkyle
         uid={{ uid }}
-        shell=/usr/bin/zsh
+        shell={{ zsh_path.stdout_lines[0] }}
   sudo: yes
   tags:
       - users
