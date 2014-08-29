@@ -27,9 +27,19 @@
   tags:
       - users
       - packages
+
+- name: Install Gentoo Packages
+  portage: package={{ item }} state=present
+  sudo: yes
+  when: ansible_os_family == "Gentoo"
+  with_items:
+    - zsh
+    - vim
+    - git
+
 - name: Create James
   user: name=jkyle
-        uid=1000
+        uid={{ uid }}
         shell=/usr/bin/zsh
   sudo: yes
   tags:
