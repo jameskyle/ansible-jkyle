@@ -5,12 +5,14 @@
   when: ansible_os_family == "RedHat"
   sudo: yes
   with_items:
+    - epel-release
     - bind-utils
     - zsh
     - git-core
     - lsof
     - tcpdump
     - vim
+    - python-pip
   tags: 
     - users
     - packages
@@ -23,7 +25,8 @@
       - apt-file
       - zsh
       - vim
-      - git
+      - git 
+      - python-pip
   tags:
       - users
       - packages
@@ -37,6 +40,13 @@
     - vim
     - git
     - ncurses
+    - dev-python/pip
+
+- name: Install Pip Packages
+  pip: package={{ item }} state=present
+  sudo: yes
+  with_items:
+    - virtualenvwrapper
 
 - shell: which zsh
   register: zsh_path
