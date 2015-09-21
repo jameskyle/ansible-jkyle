@@ -59,7 +59,7 @@
   when: pip_is_installed.rc != 0
 
 - name: Install Pip Packages
-  pip: package={{ item }} state=present
+  pip: name={{ item }} state=present
   sudo: yes
   with_items:
     - virtualenvwrapper
