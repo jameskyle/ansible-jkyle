@@ -68,7 +68,10 @@
       - users
 
 - name: Link James configuration files
-  file: src=/home/jkyle/.zprezto/runcoms/{{ item }} dest=/home/jkyle/.{{ item }} state=link
+  file: src=/home/jkyle/.zprezto/runcoms/{{ item }} 
+        dest=/home/jkyle/.{{ item }} 
+        state=link
+        force=yes
   with_items:
     - zlogin
     - zlogout
