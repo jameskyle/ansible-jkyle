@@ -1,6 +1,7 @@
 ---
 # file: roles/jkyle/tasks/main.yml
 
+# Package Installation
 - name: Install YUM Packages
   yum:  name={{ item }} state=latest
   when: ansible_os_family == "RedHat"
@@ -64,6 +65,10 @@
   with_items:
     - virtualenvwrapper
 
+- include: devtools.yml
+- include: sciencetools.yml
+# End Package Installation
+
 - shell: which zsh
   register: zsh_path
 
@@ -107,4 +112,3 @@
     - zshrc
   tags:
       - users
-
