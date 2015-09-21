@@ -63,6 +63,7 @@
   git: repo=https://jkyle@bitbucket.org/jkyle/prezto.git
        dest=/home/jkyle/.zprezto
        version=develop
+       force=yes
   tags:
       - users
 
