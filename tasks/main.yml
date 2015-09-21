@@ -1,5 +1,6 @@
 ---
 # file: roles/jkyle/tasks/main.yml
+
 - name: Install YUM Packages
   yum:  name={{ item }} state=latest
   when: ansible_os_family == "RedHat"
@@ -12,7 +13,6 @@
     - lsof
     - tcpdump
     - vim
-    - python-pip
   tags: 
     - users
     - packages
@@ -26,7 +26,6 @@
       - zsh
       - vim
       - git 
-      - python-pip
   tags:
       - users
       - packages
@@ -40,7 +39,24 @@
     - vim
     - git
     - ncurses
-    - dev-python/pip
+
+# I got the pip stuff from the bobbyrenwick/ansible-pip role 
+# Thanks dude.
+- name: check to see if pip is already installed
+  command: "pip --version"
+  ignore_errors: true
+  changed_when: false
+  register: pip_is_installed
+  changed_when: false
+
+- name: download pip
+  get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp
+  when: pip_is_installed.rc != 0
+
+- name: install pip
+  command: "python /tmp/get-pip.py"
+  sudo: yes
+  when: pip_is_installed.rc != 0
 
 - name: Install Pip Packages
   pip: package={{ item }} state=present
