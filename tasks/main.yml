@@ -48,7 +48,6 @@
   ignore_errors: true
   changed_when: false
   register: pip_is_installed
-  changed_when: false
 
 - name: download pip
   get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp
