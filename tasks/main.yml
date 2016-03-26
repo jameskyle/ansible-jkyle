@@ -41,29 +41,6 @@
     - git
     - ncurses
 
-# I got the pip stuff from the bobbyrenwick/ansible-pip role 
-# Thanks dude.
-- name: check to see if pip is already installed
-  command: "pip --version"
-  ignore_errors: true
-  changed_when: false
-  register: pip_is_installed
-
-- name: download pip
-  get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp
-  when: pip_is_installed.rc != 0
-
-- name: install pip
-  command: "python /tmp/get-pip.py"
-  sudo: yes
-  when: pip_is_installed.rc != 0
-
-- name: Install Pip Packages
-  pip: name={{ item }} state=present
-  sudo: yes
-  with_items:
-    - virtualenvwrapper
-
 - include: devtools.yml
 - include: sciencetools.yml
 # End Package Installation
