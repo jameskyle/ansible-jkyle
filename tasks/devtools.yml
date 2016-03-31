@@ -4,9 +4,6 @@
   sudo: yes
   with_items:
     - "@Development Tools"
-  tags:
-    - devtools
-    - packages
 
 - name: Install APT Devtools Packages
   apt: name={{ item }} state=latest
@@ -14,6 +11,3 @@
   sudo: yes
   with_items:
     - build-essential
-  tags:
-    - devtools
-    - packages

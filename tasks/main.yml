@@ -14,9 +14,6 @@
     - lsof
     - tcpdump
     - vim
-  tags: 
-    - users
-    - packages
 
 - name: Install APT Packages
   apt: name={{ item }} state=latest
@@ -27,9 +24,6 @@
       - zsh
       - vim
       - git 
-  tags:
-      - users
-      - packages
 
 - name: Install Gentoo Packages
   portage: package={{ item }} state=present
@@ -42,7 +36,15 @@
     - ncurses
 
 - include: devtools.yml
+  tags:
+    - devtools
+    - packages
+
 - include: sciencetools.yml
+  tags:
+    - sciencetools
+    - packages
+
 # End Package Installation
 
 - shell: which zsh
@@ -53,26 +55,18 @@
         uid={{ uid }}
         shell={{ zsh_path.stdout_lines[0] }}
   sudo: yes
-  tags:
-      - users
 - name: Configure jkyle sudoers
   copy: src=sudoers dest=/etc/sudoers.d/jkyle owner=root group=root mode=0600
   sudo: yes
-  tags:
-      - users
 
 - name: Deploy jkyle User Key
   authorized_key: user=jkyle key="{{ lookup('file', 'att_rsa.pub') }}"
-  tags:
-      - users
 
 - name: Setup James Home Directory
   git: repo=https://jkyle@bitbucket.org/jkyle/prezto.git
        dest=/home/jkyle/.zprezto
-       version=develop
+       version=centos7
        force=yes
-  tags:
-      - users
 
 - name: Link James configuration files
   file: src=/home/jkyle/.zprezto/runcoms/{{ item }} 
@@ -86,5 +80,12 @@
     - zprofile
     - zshenv
     - zshrc
-  tags:
-      - users
+
+- name: set permissions on home
+  file: path=/home/jkyle 
+        state=directory 
+        mode=0750 
+        owner=jkyle 
+        group=jkyle 
+        recurse=yes
+

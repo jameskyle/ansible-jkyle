@@ -4,9 +4,6 @@
   sudo: yes
   with_items:
     - R
-  tags:
-    - sciencetools
-    - packages
 
 - name: Install APT Science Tools Packages
   apt: name={{ item }} state=latest
@@ -15,7 +12,4 @@
   with_items:
     - r-base
     - r-base-dev
-  tags:
-    - sciencetools
-    - packages
 
