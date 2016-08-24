@@ -1,0 +1,21 @@
+- name: Install APT Packages
+  apt: name="{{ item }}" state=latest
+  when: ansible_os_family == "Debian"
+  with_items:
+      - apt-file
+      - zsh
+      - vim
+      - git
+
+- name: Install APT Devtools Packages
+  apt: name="{{ item }}" state=latest
+  when: "{{ devtools|bool }}"
+  with_items:
+    - build-essential
+
+- name: Install APT Science Tools Packages
+  apt: name="{{ item }}" state=latest
+  when: "{{ sciencetools|bool }}"
+  with_items:
+    - r-base
+    - r-base-dev

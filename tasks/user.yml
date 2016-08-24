@@ -1,0 +1,13 @@
+- shell: which zsh
+  register: zsh_path
+
+- name: Create User
+  user: name="{{ username }}"
+  shell="{{ zsh_path.stdout_lines[0] }}"
+
+- name: Configuring sudoers
+  copy: src=sudoers
+        dest="/etc/sudoers.d/{{ username }}"
+        owner=root
+        group=root
+        mode=0600

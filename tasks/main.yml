@@ -2,75 +2,35 @@
 # file: roles/jkyle/tasks/main.yml
 
 # Package Installation
-- name: Install YUM Packages
-  yum:  name={{ item }} state=latest
+- include: packages/redhat.yml
   when: ansible_os_family == "RedHat"
-  sudo: yes
-  with_items:
-    - epel-release
-    - bind-utils
-    - zsh
-    - git-core
-    - lsof
-    - tcpdump
-    - vim
 
-- name: Install APT Packages
-  apt: name={{ item }} state=latest
+- include: packages/debian.yml
   when: ansible_os_family == "Debian"
-  sudo: yes
-  with_items:
-      - apt-file
-      - zsh
-      - vim
-      - git 
 
-- name: Install Gentoo Packages
-  portage: package={{ item }} state=present
-  sudo: yes
+- include: packages/debian.yml
   when: ansible_os_family == "Gentoo"
-  with_items:
-    - zsh
-    - vim
-    - git
-    - ncurses
-
-- include: devtools.yml
-  tags:
-    - devtools
-    - packages
-
-- include: sciencetools.yml
-  tags:
-    - sciencetools
-    - packages
 
 # End Package Installation
 
-- shell: which zsh
-  register: zsh_path
+# Begin User Configuration
+- include: user.yml
+  when: "{{ user_config|bool }}"
+  # End User Configuration
 
-- name: Create James
-  user: name=jkyle
-        uid={{ uid }}
-        shell={{ zsh_path.stdout_lines[0] }}
-  sudo: yes
-- name: Configure jkyle sudoers
-  copy: src=sudoers dest=/etc/sudoers.d/jkyle owner=root group=root mode=0600
-  sudo: yes
-
-- name: Deploy jkyle User Key
-  authorized_key: user=jkyle key="{{ lookup('file', 'att_rsa.pub') }}"
+- name: Deploy User Public Key
+  authorized_key: user="{{ username }}" key="{{ pubkey }}"
+  when: "{{ deploy_pubkey|bool }}"
 
 - name: Setup James Home Directory
   git: repo=https://jkyle@bitbucket.org/jkyle/prezto.git
-       dest=/home/jkyle/.zprezto
-       version=centos7
+       dest="/home/{{ username }}/.zprezto"
+       version="{{ zprezto_version }}"
        force=yes
 
 - name: Link James configuration files
-  file: src=/home/jkyle/.zprezto/runcoms/{{ item }} 
-        dest=/home/jkyle/.{{ item }} 
+  file: src="/home/{{ username }}/.zprezto/runcoms/{{ item }}"
+        dest="/home/{{ username }}/.{{ item }}"
         state=link
         force=yes
   with_items:
@@ -82,10 +42,10 @@
     - zshrc
 
 - name: set permissions on home
-  file: path=/home/jkyle 
-        state=directory 
-        mode=0750 
-        owner=jkyle 
-        group=jkyle 
+  file: path="/home/{{ username }}"
+        state=directory
+        mode=0750
+        owner="{{ username }}"
+        group="{{ username }}"
         recurse=yes
 

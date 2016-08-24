@@ -1,0 +1,8 @@
+- name: Install Gentoo Packages
+  portage: package={{ item }} state=present
+  when: ansible_os_family == "Gentoo"
+  with_items:
+    - zsh
+    - vim
+    - git
+    - ncurses
