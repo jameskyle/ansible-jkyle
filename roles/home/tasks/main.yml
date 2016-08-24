@@ -3,24 +3,24 @@
 
 # Package Installation
 - include: packages/redhat.yml
-  when: ansible_os_family == "RedHat"
+  when: packages|bool and ansible_os_family == "RedHat"
 
 - include: packages/debian.yml
-  when: ansible_os_family == "Debian"
+  when: packages|bool and ansible_os_family == "Debian"
 
 - include: packages/debian.yml
-  when: ansible_os_family == "Gentoo"
+  when: packages|bool and ansible_os_family == "Gentoo"
 
 # End Package Installation
 
 # Begin User Configuration
 - include: user.yml
-  when: "{{ user_config|bool }}"
+  when: user_config|bool
   # End User Configuration
 
 - name: Deploy User Public Key
   authorized_key: user="{{ username }}" key="{{ pubkey }}"
-  when: "{{ deploy_pubkey|bool }}"
+  when: deploy_pubkey|bool
 
 - name: Setup James Home Directory
   git: repo=https://jkyle@bitbucket.org/jkyle/prezto.git
@@ -40,12 +40,3 @@
     - zprofile
     - zshenv
     - zshrc
-
-- name: set permissions on home
-  file: path="/home/{{ username }}"
-        state=directory
-        mode=0750
-        owner="{{ username }}"
-        group="{{ username }}"
-        recurse=yes
-

@@ -3,7 +3,7 @@
 
 - name: Create User
   user: name="{{ username }}"
-  shell="{{ zsh_path.stdout_lines[0] }}"
+        shell="{{ zsh_path.stdout_lines[0] }}"
 
 - name: Configuring sudoers
   copy: src=sudoers
@@ -11,3 +11,11 @@
         owner=root
         group=root
         mode=0600
+
+- name: Set permissions on home
+  file: path="/home/{{ username }}"
+        state=directory
+        mode=0750
+        owner="{{ username }}"
+        group="{{ username }}"
+        recurse=yes

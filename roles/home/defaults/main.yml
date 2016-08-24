@@ -1,7 +1,9 @@
 devtools: false
 sciencetools: false
 user_config: false
+packages: false
 username: jkyle
 pubkey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCd9PscShHDbpk0bCc4VVgDV05DCy4rIwpIvyWu9Th4IS9D7cDieW+qG8nPoQaZ263U+oSpLUqfTVs9x7PspiVbbvsObip3ig7xYfd5b8EdTizOKqGfAESae+VmKofz5hadSLIdhU9sn8nSBUdQr1tsgmrvTtqkJHngeFGZi+cJZsB7WSmQb328ksIycJxK4rqcopw06sFDRiNCoECj/46FITFQXjGK/nRJI8wqQ4ft1Pbkd8Gxb3TJH5dX3J5OUMvBITrBmdcY3Qb70hyym86DUc6CstgXsvcBkp2e02T6IbpLzNh7ZQpuUrtRZXKPA6oxivvByY7WzbfxUMOKIZIV 
 deploy_pubkey: true
-zprezto: develop
+zprezto_version: develop
+
